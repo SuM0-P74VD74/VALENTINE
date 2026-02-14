@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Mom ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Poppins',sans-serif;
+  background:black;
+  overflow-x:hidden;
+  color:white;
+}
+
+canvas{position:fixed;top:0;left:0}
+#galaxyCanvas{z-index:-4}
+#starCanvas{z-index:-3}
+#fireworkCanvas{z-index:-2}
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:4rem;
+  background:linear-gradient(90deg,#ff4da6,#ffccff,#ff4da6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{text-shadow:0 0 10px #ff4da6}
+  to{text-shadow:0 0 30px #ff99cc}
+}
+
+#countdown{margin-top:20px;font-size:1.5rem;color:#ff99cc}
+
+/* 3D ROTATING HEART */
+.heart3d-wrap{perspective:1000px;margin-top:40px}
+.heart3d{
+  width:120px;height:120px;
+  position:relative;
+  transform-style:preserve-3d;
+  animation:rotate 8s linear infinite;
+}
+@keyframes rotate{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.heart3d div{
+  position:absolute;
+  width:120px;height:120px;
+  background:#ff4da6;
+  transform:rotate(45deg);
+  border-radius:20px;
+}
+.heart3d div:before,
+.heart3d div:after{
+  content:"";
+  position:absolute;
+  width:120px;height:120px;
+  background:#ff4da6;
+  border-radius:50%;
+}
+.heart3d div:before{top:-60px;left:0}
+.heart3d div:after{left:-60px;top:0}
+
+.gallery{
+  padding:60px 20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+.gallery img{
+  width:100%;border-radius:20px;
+  box-shadow:0 0 20px rgba(255,77,166,0.5);
+  transition:transform 0.5s;
+}
+.gallery img:hover{transform:scale(1.05)}
+
+.letter-wrap{text-align:center;padding:80px 20px}
+.letter{background:rgba(255,255,255,0.1);max-width:600px;margin:auto;padding:40px;border-radius:20px;display:none}
+
+button{padding:15px 30px;border:none;border-radius:30px;background:#ff4da6;color:white;font-size:1rem;cursor:pointer}
+
+</style>
+</head>
+<body>
+
+<canvas id="galaxyCanvas"></canvas>
+<canvas id="starCanvas"></canvas>
+<canvas id="fireworkCanvas"></canvas>
+
+<audio id="bgMusic" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<section class="hero">
+<h1>MOM ❤️</h1>
+<div id="countdown"></div>
+<div class="heart3d-wrap">
+<div class="heart3d"><div></div></div>
+</div>
+
+</section>
+
+<section class="gallery">
+<img src="img1.jpeg">
+<img src="img2.jpeg">
+<img src="img3.jpeg">
+<img src="img4.jpeg">
+<img src="img5.jpeg">
+</section>
+
+<section class="letter-wrap">
+<button onclick="openLetter()">Open My Heart 💌</button>
+<div class="letter" id="letter">
+<h2>Dear Mom ❤️</h2>
+<p>You are my strength, my home, my forever Valentine.</p>
+</div>
+</section>
+
+<script>
+/* MUSIC */
+document.addEventListener('click',()=>{
+document.getElementById('bgMusic').play();
+},{once:true});
+
+/* COUNTDOWN */
+const countdown=document.getElementById('countdown');
+function updateCountdown(){
+const now=new Date().getTime();
+const v=new Date('Feb 14, 2026 00:00:00').getTime();
+const d=v-now;
+if(d<=0){countdown.innerHTML='Happy Valentine’s Day Mom ❤️';return}
+const days=Math.floor(d/(1000*60*60*24));
+const hrs=Math.floor((d/(1000*60*60))%24);
+const min=Math.floor((d/(1000*60))%60);
+const sec=Math.floor((d/1000)%60);
+countdown.innerHTML=`${days}d ${hrs}h ${min}m ${sec}s`;
+}
+setInterval(updateCountdown,1000);updateCountdown();
+
+function openLetter(){document.getElementById('letter').style.display='block'}
+
+/* GALAXY BACKGROUND */
+const galaxy=document.getElementById('galaxyCanvas');
+const gctx=galaxy.getContext('2d');
+galaxy.width=innerWidth;galaxy.height=innerHeight;
+let stars=[];
+for(let i=0;i<300;i++)stars.push({x:Math.random()*galaxy.width,y:Math.random()*galaxy.height,r:Math.random()*2});
+function drawGalaxy(){
+gctx.fillStyle='black';gctx.fillRect(0,0,galaxy.width,galaxy.height);
+gctx.fillStyle='white';
+stars.forEach(s=>{gctx.beginPath();gctx.arc(s.x,s.y,s.r,0,Math.PI*2);gctx.fill();s.y+=0.2;if(s.y>galaxy.height)s.y=0});
+requestAnimationFrame(drawGalaxy);
+}
+drawGalaxy();
+
+/* FIREWORK TEXT */
+const fw=document.getElementById('fireworkCanvas');
+const fctx=fw.getContext('2d');
+fw.width=innerWidth;fw.height=innerHeight;
+function fireworkText(text){
+fctx.clearRect(0,0,fw.width,fw.height);
+fctx.font='bold 100px Arial';
+fctx.textAlign='center';
+fctx.fillStyle='white';
+fctx.fillText(text,fw.width/2,fw.height/3);
+}
+setTimeout(()=>fireworkText('I LOVE YOU MOM'),2000);
+
+/* STAR MOM */
+const canvas=document.getElementById('starCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=innerWidth;canvas.height=innerHeight;
+function textPoints(txt){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle='white';ctx.font='bold 160px Arial';ctx.textAlign='center';
+ctx.fillText(txt,canvas.width/2,canvas.height/2);
+const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+const pts=[];
+for(let y=0;y<canvas.height;y+=6){
+for(let x=0;x<canvas.width;x+=6){
+if(data[(y*canvas.width+x)*4+3]>150)pts.push({x,y})}}
+return pts}
+const pts=textPoints('MOM');
+(function anim(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,Math.PI*2);ctx.fillStyle='white';ctx.fill()});
+requestAnimationFrame(anim)})();
+</script>
+</body>
+</html>
